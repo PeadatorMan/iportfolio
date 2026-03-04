@@ -3,6 +3,7 @@ import { Menu, X, ChevronRight, MapPin, Mail, Phone, Smile, Briefcase, Headset, 
 import { SOCIAL_LINKS, MENU_ITEMS, PROFILE_DATA, SKILLS, RESUME_EDUCATION, RESUME_EXPERIENCE, PORTFOLIO_ITEMS, PORTFOLIO_VDO_ITEMS, SERVICES, TESTIMONIALS, RESUME_CERTIFICATES } from './constants';
 import GeminiChat from './components/GeminiChat';
 import { generatePDF } from './services/pdfService';
+import Masonry from 'react-masonry-css';
 
 // --- Components defined in App.tsx for single-file XML requirement simplicity per instructions ---
 
@@ -477,8 +478,10 @@ const VirtualMasonryItem: React.FC<{ item: any; filter: string; onPlay: (url: st
   }, []);
 
   let imageUrl = item.image;
+  let isShorts = false;
   if (item.category === 'VDO' && item.links && item.links.length > 0) {
     const url = item.links[0].url;
+    isShorts = url.includes('shorts/');
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     if (match && match[2].length === 11) {
@@ -491,15 +494,26 @@ const VirtualMasonryItem: React.FC<{ item: any; filter: string; onPlay: (url: st
   return (
     <div
       ref={containerRef}
-      className={`group relative overflow-hidden rounded-lg shadow-md bg-white ${filter === 'VDO' ? 'break-inside-avoid shadow-none border-b shrink-0' : ''}`}
+      className={`group relative overflow-hidden rounded-lg shadow-md bg-white w-full`}
       style={virtualStyle}
     >
       {isVisible && (
         <>
-          <img src={imageUrl} alt={item.title} loading="lazy" className={`w-full object-cover transition-transform duration-500 group-hover:scale-110 ${filter === 'VDO' ? 'h-auto rounded' : 'h-64'}`} />
-          <div className={`absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-white p-4 text-center ${filter === 'VDO' ? 'rounded' : ''}`}>
-            <h4 className="text-xl font-bold mb-1">{item.title}</h4>
-            <p className="uppercase text-sm mb-4">{item.category}</p>
+          <img
+            src={imageUrl}
+            alt={item.title}
+            loading="lazy"
+            className={`w-full object-cover transition-transform duration-500 group-hover:scale-110 ${filter === 'VDO' ? (isShorts ? 'aspect-[9/16]' : 'aspect-video') : 'h-[auto]'
+              }`}
+          />
+          <div className="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-white p-4 text-center">
+            {item.category !== 'VDO' && (
+              <>
+                <h4 className="text-xl font-bold mb-1">{item.title}</h4>
+                <p className="uppercase text-sm mb-4">{item.category}</p>
+              </>
+            )}
+
             <div className="flex gap-3 justify-center text-center flex-wrap">
               {item.links && item.links.map((link: any, i: number) => {
                 const isVdo = item.category === 'VDO';
@@ -585,11 +599,27 @@ const Portfolio = () => {
         </ul>
       </div>
 
-      <div className={filter === 'VDO' ? "columns-2 md:columns-4 lg:columns-6 gap-4 space-y-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"}>
-        {displayedItems.map((item) => (
-          <VirtualMasonryItem key={item.id} item={item} filter={filter} onPlay={setVdoModalUrl} />
-        ))}
-      </div>
+      {filter === 'VDO' ? (
+        <Masonry
+          breakpointCols={{
+            default: 6,
+            1024: 4,
+            768: 3
+          }}
+          className="flex w-auto -ml-4"
+          columnClassName="pl-1 bg-clip-padding space-y-1"
+        >
+          {displayedItems.map((item) => (
+            <VirtualMasonryItem key={item.id} item={item} filter={filter} onPlay={setVdoModalUrl} />
+          ))}
+        </Masonry>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {displayedItems.map((item) => (
+            <VirtualMasonryItem key={item.id} item={item} filter={filter} onPlay={setVdoModalUrl} />
+          ))}
+        </div>
+      )}
 
       {visibleCount < filteredItems.length && (
         <div className="text-center mt-12">
