@@ -3,7 +3,8 @@ import { Menu, X, ChevronRight, MapPin, Mail, Phone, Smile, Briefcase, Headset, 
 import { SOCIAL_LINKS, MENU_ITEMS, PROFILE_DATA, SKILLS, RESUME_EDUCATION, RESUME_EXPERIENCE, PORTFOLIO_ITEMS, PORTFOLIO_VDO_ITEMS, SERVICES, TESTIMONIALS, RESUME_CERTIFICATES } from './constants';
 import GeminiChat from './components/GeminiChat';
 import { generatePDF } from './services/pdfService';
-import Masonry from 'react-masonry-css';
+import MasonryLayout from 'masonry-layout';
+import imagesLoaded from 'imagesloaded';
 
 // --- Components defined in App.tsx for single-file XML requirement simplicity per instructions ---
 
@@ -494,7 +495,7 @@ const VirtualMasonryItem: React.FC<{ item: any; filter: string; onPlay: (url: st
   return (
     <div
       ref={containerRef}
-      className={`group relative overflow-hidden rounded-lg shadow-md bg-white w-full`}
+      className={`group relative overflow-hidden bg-white w-full ${filter !== 'VDO' ? 'rounded-lg shadow-md' : ''}`}
       style={virtualStyle}
     >
       {isVisible && (
@@ -550,10 +551,43 @@ const Portfolio = () => {
   const [visibleCount, setVisibleCount] = useState(9); // Initial view count, fits 3x3 grid nicely
   const [vdoModalUrl, setVdoModalUrl] = useState<string | null>(null);
 
+  const masonryRef = useRef<HTMLDivElement>(null);
+  const masonryInstance = useRef<any>(null);
+
   useEffect(() => {
     // Reset visible count when filter changes
     setVisibleCount(9);
   }, [filter]);
+
+  useEffect(() => {
+    if (filter === 'VDO' && masonryRef.current) {
+      const initMasonry = () => {
+        if (!masonryInstance.current) {
+          masonryInstance.current = new MasonryLayout(masonryRef.current!, {
+            itemSelector: '.masonry-item',
+            columnWidth: '.masonry-sizer',
+            percentPosition: true,
+          });
+        } else {
+          masonryInstance.current.reloadItems();
+        }
+
+        imagesLoaded(masonryRef.current!).on('progress', () => {
+          masonryInstance.current?.layout();
+        });
+      };
+
+      const timer = setTimeout(initMasonry, 50);
+      return () => clearTimeout(timer);
+    }
+
+    return () => {
+      if (filter !== 'VDO' && masonryInstance.current) {
+        masonryInstance.current.destroy();
+        masonryInstance.current = null;
+      }
+    };
+  }, [filter, visibleCount]);
 
   let filteredItems = PORTFOLIO_ITEMS;
   if (filter === 'all') {
@@ -600,19 +634,21 @@ const Portfolio = () => {
       </div>
 
       {filter === 'VDO' ? (
-        <Masonry
-          breakpointCols={{
-            default: 6,
-            1024: 4,
-            768: 3
-          }}
-          className="flex w-auto -ml-4"
-          columnClassName="pl-1 bg-clip-padding space-y-1"
-        >
-          {displayedItems.map((item) => (
-            <VirtualMasonryItem key={item.id} item={item} filter={filter} onPlay={setVdoModalUrl} />
-          ))}
-        </Masonry>
+        <div ref={masonryRef} className="w-full relative">
+          <div className="masonry-sizer w-1/2 md:w-1/3 lg:w-1/6" style={{ height: 0 }}></div>
+          {displayedItems.map((item) => {
+            let isShorts = false;
+            if (item.category === 'VDO' && item.links && item.links.length > 0) {
+              isShorts = item.links[0].url.includes('shorts/');
+            }
+            const spanClasses = isShorts ? 'w-1/2 md:w-1/3 lg:w-1/6' : 'w-full md:w-2/3 lg:w-1/3';
+            return (
+              <div key={item.id} className={`masonry-item p-0 ${spanClasses}`}>
+                <VirtualMasonryItem item={item} filter={filter} onPlay={setVdoModalUrl} />
+              </div>
+            );
+          })}
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayedItems.map((item) => (
