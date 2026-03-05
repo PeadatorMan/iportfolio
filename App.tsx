@@ -3,7 +3,7 @@ import { Menu, X, ChevronRight, MapPin, Mail, Phone, Smile, Briefcase, Headset, 
 import { SOCIAL_LINKS, MENU_ITEMS, PROFILE_DATA, SKILLS, RESUME_EDUCATION, RESUME_EXPERIENCE, PORTFOLIO_ITEMS, PORTFOLIO_VDO_ITEMS, SERVICES, TESTIMONIALS, RESUME_CERTIFICATES } from './constants';
 import GeminiChat from './components/GeminiChat';
 import { generatePDF } from './services/pdfService';
-import MasonryLayout from 'masonry-layout';
+import Masonry from 'masonry-layout';
 import imagesLoaded from 'imagesloaded';
 
 // --- Components defined in App.tsx for single-file XML requirement simplicity per instructions ---
@@ -563,7 +563,7 @@ const Portfolio = () => {
     if (filter === 'VDO' && masonryRef.current) {
       const initMasonry = () => {
         if (!masonryInstance.current) {
-          masonryInstance.current = new MasonryLayout(masonryRef.current!, {
+          masonryInstance.current = new Masonry(masonryRef.current!, {
             itemSelector: '.masonry-item',
             columnWidth: '.masonry-sizer',
             percentPosition: true,

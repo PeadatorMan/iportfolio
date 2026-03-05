@@ -4,7 +4,7 @@ services:
   iportfolio:
     build: .
     ports:
-      - "3020:5173" # Host:Container
+      - "5173:5173" # Host:Container
     volumes:
       - .:/app
       - /app/node_modules # Prevents local node_modules override
