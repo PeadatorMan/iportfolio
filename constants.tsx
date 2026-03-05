@@ -45,7 +45,7 @@ export const RESUME_EDUCATION: ResumeItem[] = [
   {
     title: 'B.Eng (Computer Engineering)',
     subtitle: 'Mahanakorn University of Technology, Bangkok, Thailand',
-    duration: '1997 - 2001',
+    duration: '1999 - 2001',
     description: ['A Bachelor of Engineering (B.Eng.) in Electrical and Computer Engineering (ECE) is a 4 - year undergraduate program combining, typically, 127–149 credits of coursework in power systems, electronics, and computer science.', 'It prepares graduates for roles in AI, robotics, embedded systems, and telecommunications, often featuring capstone projects and specialized tracks']
   },
   {
