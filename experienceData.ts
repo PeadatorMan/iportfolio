@@ -27,10 +27,10 @@ export const RESUME_EXPERIENCE: ResumeItem[] = [
         details: ["Revamped the user journey for a major e-commerce retailer, improving checkout conversion by 15%."]
       },
       {
-        projectName: "promptpedia",
-        client: "365liveitup",
+        projectName: "POS-tooldee",
+        client: "tooldee",
         framework: "Fullstack Developer, UX/UI Designer, Project Manager, Data Analyst",
-        details: ["Node.js, Nextjs, TypeScript, Tailwind CSS, Supabase, OpenAI API, Gemini API, N8N, MongoDB, PostgreSQL, Redis, Docker, Git, GitHub, GitLab", "Developed a fully functional cross-platform memory training application prototype using"]
+        details: ["Node.js, Nextjs, TypeScript, Tailwind CSS, Supabase, OpenAI API, Gemini API, mySQL, Docker, Git, GitHub, GitLab", "Developed a fully functional cross-platform memory training application prototype using"]
       }
     ]
   },
