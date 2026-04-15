@@ -113,7 +113,7 @@ export const PROFILE_DATA = {
   name: "Ratchapon Nuch-Opas",
   role: ["Fullstack Developer", "UI/UX Designer", "WebDeveloper", "Freelancer"],
   aboutShort: "I am a passionate UX/UI designer and web developer based in Bangkok, Thailand.",
-  aboutLong: "Highly motivated recent graduate with a strong foundational knowledge in Full Stack Development," +
+  aboutLong: "A strong foundational knowledge in Full Stack Development," +
     "specializing in Angular, Node.js and modern JavaScript frameworks. Demonstrated ability to quickly design, " +
     "develop, and debug robust web applications and mobile prototypes (Flutter)." +
     "Eager to apply problem-solving skills and continuous learning aptitude to contribute " +
@@ -124,9 +124,9 @@ export const PROFILE_DATA = {
   email: "looklikelove@me.com",
   phone: "+66 61-524-6858",
   city: "Bangkok, Thailand",
-  degree: "Master",
+  degree: "Bachelor of Engineering (B.Eng.) ",
   freelance: "Available",
-  website: "cv.365liveitup.com",
+  website: "https://cv.365liveitup.space",
   age: "N/A",
   birthday: "14 June"
 };
